@@ -1,0 +1,9 @@
+# Output written next to the scripts at runtime
+found.log
+responded-*.txt
+free-*.txt
+openports-*.txt
+
+# Address pools describing a real site. Keep site data out of the repo.
+*.local.txt
+pools/
