@@ -1,0 +1,24 @@
+# Output written next to the scripts at runtime
+found.log
+responded-*.txt
+free-*.txt
+openports-*.txt
+
+# Address pools describing a real site. Keep site data out of the repo.
+*.local.txt
+pools/
+
+# Local-only files, never committed. Any other *.local file stays local too.
+wordlist.local
+*.local
+
+# Claude Code's per-machine settings and session state
+.claude/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Python bytecode
+__pycache__/
+*.pyc

@@ -1,0 +1,20 @@
+# Address pool for netprobe.sh / Test-Network.cmd
+#
+# One entry per line. Blank lines and lines starting with # are ignored.
+# Formats, mixed freely:
+#
+#   192.0.2.57                 single address
+#   printer.example.com        hostname, resolved when the list is read
+#   192.0.2.60-192.0.2.74      range
+#   192.0.2.60-74              range, last octet only
+#   192.0.2.0/24               CIDR
+#   192.0.2.0 255.255.255.0    dotted mask
+#
+# Addresses below are from RFC 5737, reserved for documentation.
+
+192.0.2.0/24
+
+# Skip the gateway and the two switches when this list is used as a pool,
+# or move these into the exclusion prompt instead.
+# 192.0.2.1
+# 192.0.2.2-192.0.2.3

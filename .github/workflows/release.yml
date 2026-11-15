@@ -1,0 +1,45 @@
+name: Release
+
+# Runs in the PUBLIC repository when a version tag arrives (or by hand for a
+# tag): runs the tests and creates the GitHub release from the CHANGELOG notes.
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to build the release for, e.g. v1.0.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    if: github.repository == 'rob-paprocki/netprobe'
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - name: Tag must be exactly vX.Y.Z
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "bad tag name"; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ env.TAG }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tests
+        run: python3 -m unittest discover -s tests
+      - name: Release notes from the changelog
+        run: python3 scripts/release/changelog.py notes "${TAG#v}" > notes.md
+      - name: Create GitHub release (skip if it already exists)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "release $TAG already exists; nothing to do"; exit 0
+          fi
+          gh release create "$TAG" --title "netprobe ${TAG#v}" --notes-file notes.md --verify-tag
